@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NIMS Kohat - Certificate Verification</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: #e8ece7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+  }
+  .card {
+    background: #fdfdfb;
+    border: 6px solid #0d5c3a;
+    border-radius: 6px;
+    max-width: 480px;
+    width: 100%;
+    padding: 36px 32px;
+    text-align: center;
+  }
+  h1 { color: #0d5c3a; font-size: 22px; letter-spacing: 1px; margin: 0 0 4px; }
+  .sub { color: #444; font-size: 13px; margin-bottom: 24px; }
+  .status {
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+  }
+  .status.valid { background: #e4f3ea; color: #0d5c3a; border: 1px solid #0d5c3a; }
+  .status.invalid { background: #fbe9e9; color: #a12727; border: 1px solid #a12727; }
+  table { width: 100%; border-collapse: collapse; text-align: left; font-size: 15px; }
+  table td { padding: 8px 4px; border-bottom: 1px solid #ddd; }
+  table td:first-child { color: #555; width: 45%; }
+  table td:last-child { color: #16231c; font-weight: bold; }
+  .footer-note { margin-top: 22px; font-size: 12px; color: #777; font-style: italic; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>NIMS KOHAT</h1>
+    <div class="sub">National Institute of Medical Sciences — Certificate Verification</div>
+    <div id="result"></div>
+  </div>
+
+<script>
+  // Add one entry per certificate issued. Copy the pattern below for each new certificate.
+  const certificates = {
+    "NIMS-2026-001": {
+      name: "Student Full Name",
+      course: "3 Months Ultrasound Skill Certificate",
+      rotation: "1 Month Rotation - Department of Radiology (Dr. Nazish Hussain)",
+      issueDate: "01 Sep 2026"
+    }
+    // "NIMS-2026-002": { name: "...", course: "...", rotation: "...", issueDate: "..." },
+  };
+
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  const resultDiv = document.getElementById('result');
+
+  if (!id) {
+    resultDiv.innerHTML = '<div class="status invalid">No certificate ID provided.</div><div class="footer-note">Scan a certificate QR code to verify it here.</div>';
+  } else if (certificates[id]) {
+    const c = certificates[id];
+    resultDiv.innerHTML = `
+      <div class="status valid">&#10003; Certificate Verified</div>
+      <table>
+        <tr><td>Certificate No.</td><td>${id}</td></tr>
+        <tr><td>Name</td><td>${c.name}</td></tr>
+        <tr><td>Course</td><td>${c.course}</td></tr>
+        <tr><td>Rotation</td><td>${c.rotation}</td></tr>
+        <tr><td>Issue Date</td><td>${c.issueDate}</td></tr>
+      </table>
+      <div class="footer-note">This certificate was issued by NIMS Kohat.</div>
+    `;
+  } else {
+    resultDiv.innerHTML = '<div class="status invalid">&#10007; Certificate not found</div><div class="footer-note">This certificate ID does not match our records.</div>';
+  }
+</script>
+</body>
+</html>
